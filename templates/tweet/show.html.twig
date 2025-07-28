@@ -81,6 +81,12 @@
 	</div>
 
 	<div class="text-white">
-		<p>Affichage des commentaires</p>
+		<p>Commentaires</p><br>
+
+		{% for commentaire in tweet.commentaires %}
+			<p>{{ commentaire.dateComment ? commentaire.dateComment| date("d/m/y H:i") : "" }}</p>
+			<p>{{ commentaire.content }}</p><br>
+  		{% endfor %}
+
 	</div>
 {% endblock %}

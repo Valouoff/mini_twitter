@@ -53,11 +53,12 @@ final class CommentaireController extends AbstractController
         return $this->render('commentaire/new.html.twig', [
             'commentaire' => $commentaire,
             'form' => $form,
-
             'tweet' => $tweet,
 
         ]);
     }
+
+    // AFFICHER UN COMMENTAIRE
 
     #[Route('/{id}', name: 'app_commentaire_show', methods: ['GET'])]
     public function show(Commentaire $commentaire): Response
@@ -66,6 +67,8 @@ final class CommentaireController extends AbstractController
             'commentaire' => $commentaire,
         ]);
     }
+
+    // MODIFIER UN COMMENTAIRE
 
     #[Route('/{id}/edit', name: 'app_commentaire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commentaire $commentaire, EntityManagerInterface $entityManager): Response
@@ -84,6 +87,9 @@ final class CommentaireController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+    // SUPPRIMER UN COMMENTAIRE
 
     #[Route('/{id}', name: 'app_commentaire_delete', methods: ['POST'])]
     public function delete(Request $request, Commentaire $commentaire, EntityManagerInterface $entityManager): Response

@@ -7,6 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class UserType extends AbstractType
 {
@@ -16,7 +17,7 @@ class UserType extends AbstractType
             ->add('id')
             ->add('email')
             ->add('roles')
-        ;
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

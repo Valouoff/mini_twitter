@@ -67,8 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilPic = null;
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $avatar = null;
+
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profilBanierre = null;
@@ -309,16 +310,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getProfilPic(): ?string
+    public function getAvatar(): ?string
     {
-        return $this->profilPic;
+    return $this->avatar;
     }
 
-    public function setProfilPic(?string $profilPic): static
+    public function setAvatar(?string $avatar): self
     {
-        $this->profilPic = $profilPic;
-
-        return $this;
+    $this->avatar = $avatar;
+    return $this;
     }
 
     public function getProfilBanierre(): ?string

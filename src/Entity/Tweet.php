@@ -125,12 +125,12 @@ class Tweet
 
     public function isLikedBy(User $user): bool
     {
-    foreach ($this->getLikes() as $like) {
-        if ($like->getUser() === $user) {
-            return true;
+        foreach ($this->getLikes() as $like) {
+            if ($like->getUser() === $user) {
+                return true;
+            }
         }
-    }
-    return false;
+        return false;
     }
 
     /**

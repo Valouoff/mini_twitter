@@ -9,6 +9,16 @@ import './bootstrap.js';
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 
+document.getElementById('avatarImg').onclick = function() {
+    document.querySelector('input[type=file][name$="[avatar]"]').click();
+};
+
+document.querySelector('input[type=file][name$="[avatar]"]').addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+        document.getElementById('avatarImg').src = URL.createObjectURL(e.target.files[0]);
+    }
+});
+
 window.showTab = function(tab, event) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
   document.querySelectorAll('.tab-button').forEach(el => {

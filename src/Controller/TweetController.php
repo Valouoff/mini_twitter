@@ -65,6 +65,20 @@ final class TweetController extends AbstractController
         return $this->redirectToRoute('app_tweet_index');
     }
 
+
+    // AFFICHE LES COMMENTAIRES D'UN TWEET
+    #[Route('/{id}/commentaires', name: 'app_commentaire_show', methods: ['GET'])]
+    public function showComment(Tweet $tweet): Response
+    {
+        $commentaires = $tweet->getCommentaires();
+
+        return $this->render('commentaire/show.html.twig', [
+            'tweet' => $tweet,
+            'commentaires' => $commentaires,
+        ]);
+    }
+
+
     // LIKE UN TWEET
 
     #[Route('/{id}/like', name: 'app_tweet_like', methods: ['POST'])]
