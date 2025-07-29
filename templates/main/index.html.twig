@@ -1,20 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+  <!-- Colonne gauche : Logo X -->
+  <div class="flex justify-center items-center w-full lg:w-1/2 p-6">
+    <svg class="w-64 h-64 text-white" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+      <path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66"/>
+    </svg>
+  </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+  <!-- Colonne droite : formulaire -->
+  <div class="flex flex-col justify-center items-center w-full lg:w-1/2 px-6 py-12">
+    <!-- Bouton Créer un compte -->
+    <a href="{{ path('app_register') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full text-base w-full max-w-md mb-6 text-center">
+  Créer un compte
+</a>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/laragon/www/Arinfo/symfony/mini_twitter/src/Controller/MainController.php</code></li>
-        <li>Your template at <code>C:/laragon/www/Arinfo/symfony/mini_twitter/templates/main/index.html.twig</code></li>
-    </ul>
+    <!-- Texte CGU -->
+    <p class="text-sm text-gray-400 text-center max-w-md leading-relaxed mb-8">
+      En vous inscrivant, vous acceptez les 
+      <a href="#" class="text-blue-400 hover:underline">Conditions d'utilisation</a> et la
+      <a href="#" class="text-blue-400 hover:underline">Politique de confidentialité</a>, notamment l'
+      <a href="#" class="text-blue-400 hover:underline">utilisation des cookies</a>.
+    </p>
+
+    <!-- Connexion -->
+    <div class="text-center w-full max-w-md">
+      <p class="text-white font-semibold mb-3">Vous avez déjà un compte ?</p>
+      <a href="{{ path('app_login') }}" class="w-full border border-gray-500 text-white font-semibold py-3 px-6 rounded-full hover:bg-white hover:text-black transition text-center block">
+  Se connecter
+</a>
+    </div>
+  </div>
 </div>
 {% endblock %}

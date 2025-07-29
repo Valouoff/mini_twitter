@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+    <h1>User</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Tweets</th>
+                <td>
+                {% for tweet in tweets %}
+                <div>
+			        {{ tweet.content }} <br>
+                </div>
+                {% else %}
+                <div>Aucun tweet</div>
+		        {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Tweets likés</th>
+                <td>
+                {% for like in likes %}
+                <div>
+                    Tweet liké : {{ like.tweet.content }} <br>
+                    Liké le : {{ like.dateLiker|date('d/m/Y') }}
+                </div>
+                {% else %}
+                    <div>Aucun like</div>
+		        {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_index') }}">Users</a>
+{# 
+    <a href="{{ path('app_admin_delete') }}">Supprimer</a> #}
+
+    {{ include('admin/delete.html.twig') }}
+{% endblock %}

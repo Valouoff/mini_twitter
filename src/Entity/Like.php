@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
+#[ORM\HasLifecycleCallbacks]
 class Like
 {
     #[ORM\Id]
@@ -17,6 +18,14 @@ class Like
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $dateLiker = null;
+
+    #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    private ?Tweet $tweet = null;
 
     public function getId(): ?int
     {
@@ -33,5 +42,37 @@ class Like
         $this->dateLiker = $dateLiker;
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTweet(): ?Tweet
+    {
+        return $this->tweet;
+    }
+
+    public function setTweet(?Tweet $tweet): static
+    {
+        $this->tweet = $tweet;
+
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setDateLikerValue(): void
+    {
+        if ($this->dateLiker === null) {
+            $this->dateLiker = new \DateTime();
+        }
     }
 }
