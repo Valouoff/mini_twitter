@@ -10,16 +10,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/retweet')]
+#[IsGranted('ROLE_USER')]
 final class RetweetController extends AbstractController
 {
     #[Route(name: 'app_retweet_index', methods: ['GET'])]
     public function index(RetweetRepository $retweetRepository): Response
     {
-        return $this->render('retweet/index.html.twig', [
-            'retweets' => $retweetRepository->findAll(),
-        ]);
+        return $this->redirectToRoute('app_tweet_index');
     }
 
     #[Route('/new', name: 'app_retweet_new', methods: ['GET', 'POST'])]
@@ -71,7 +71,7 @@ final class RetweetController extends AbstractController
     #[Route('/{id}', name: 'app_retweet_delete', methods: ['POST'])]
     public function delete(Request $request, Retweet $retweet, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$retweet->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $retweet->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($retweet);
             $entityManager->flush();
         }

@@ -2,11 +2,15 @@
 
 namespace App\Entity;
 
+use App\Form\CommentaireType;
 use App\Repository\TweetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use PHPUnit\TextUI\Configuration\File;
+use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TweetRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -18,6 +22,17 @@ class Tweet
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(
+        message: "Vous ne pouvez pas publier un message vide.",
+        normalizer: 'trim'
+    )]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: "Le message doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le message ne peut pas dépasser {{ limit }} caractères.",
+        normalizer: 'trim'
+    )]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -37,6 +52,7 @@ class Tweet
      * @var Collection<int, Commentaire>
      */
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'tweet')]
+    #[ORM\OrderBy(['dateComment' => 'DESC'])]
     private Collection $commentaires;
 
     /**
@@ -44,6 +60,41 @@ class Tweet
      */
     #[ORM\OneToMany(targetEntity: Retweet::class, mappedBy: 'tweet')]
     private Collection $retweets;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $media = null;
+
+    private ?File $imageFile = null;
+
+    #[ORM\Column(type: "integer")]
+    private $views = 0;
+
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): self
+    {
+        $this->views = $views;
+        return $this;
+    }
+
+    public function incrementViews(): self
+    {
+        $this->views++;
+        return $this;
+    }
+
+    public function setImageFile(?File $file): void
+    {
+        $this->imageFile = $file;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
 
     public function __construct()
     {
@@ -199,5 +250,17 @@ class Tweet
         if ($this->dateTweet === null) {
             $this->dateTweet = new \DateTime();
         }
+    }
+
+    public function getMedia(): ?string
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?string $media): static
+    {
+        $this->media = $media;
+
+        return $this;
     }
 }

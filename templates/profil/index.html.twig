@@ -2,6 +2,7 @@
 
 {% block title %}
 	{{ app.user.username }}
+	/ X
 {% endblock %}
 
 {% block body %}
@@ -9,7 +10,7 @@
 		class="w-full bg-[#000000] text-white min-h-screen rounded shadow-lg">
 
 		<!-- Header -->
-		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 mt-5 sm:mt-0">
 			<div class="flex items-center gap-2">
 				<button>
 					<a href="{{ path('app_tweet_index')}}">
@@ -38,83 +39,140 @@
 		<div id="editProfileModal" class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm hidden">
 			<div class="relative w-full max-w-lg mx-auto bg-[#000000] rounded-xl overflow-hidden shadow-2xl border border-gray-800">
 
-				<!-- Début Formulaire-->
 				{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'p-10', 'data-turbo': 'false'}}) }}
-				<button type="submit" class="absolute top-8 right-6 px-4 py-1 border border-blue-500 text-blue-400 rounded-full font-semibold cursor-pointer hover:bg-blue-500 hover:text-white transition">
-					Sauvegarder
-				</button>
 
 				<div>
-					<div class="text-xl font-bold mb-6">Modifier profil</div>
-						<div class="mx-auto flex justify-center">
-							<div class="relative w-28 h-28">
+					<div class="text-xl font-bold mb-6">Éditer le profil</div>
 
-							<img id="avatarImg" src="{{ user.avatar ? asset('uploads/avatars/' ~ user.avatar) : 'https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg' }}" class="mb-10 object-cover rounded-full border-2 border-[#2c2c2c] shadow-lg cursor-pointer" alt="Avatar">
-							</div>
-							<div style="display: none;">
-								{{ form_row(form.avatar, {'attr': {'id': 'avatarInput'}}) }}
-							</div>
-						</div>
+					<!-- Bannière -->
+					<div class="relative h-36 w-full rounded-lg bg-gray-800 mb-12 overflow-hidden group">
+						<input type="file" id="bannerInput" name="{{ form.profilBanierre.vars.full_name }}" class="hidden" accept="image/*" onchange="previewBanner(event)">
+						<label for="bannerInput" class="absolute inset-0 cursor-pointer z-20">
+							{% if user.profilBanierre and app.user and app.user.id == user.id %}
+								<img id="bannerImg" src="{{ asset('uploads/banners/' ~ user.profilBanierre) }}" alt="Bannière" class="object-cover w-full h-full">
+								<div class="absolute inset-0 flex flex-row items-center justify-center gap-4">
+									<span class="bg-black/30 rounded-full p-3 hover:bg-black/50 transition">
+										<svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+											<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M4 18V8a1 1 0 0 1 1-1h1.5l1.707-1.707A1 1 0 0 1 8.914 5h6.172a1 1 0 0 1 .707.293L17.5 7H19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/>
+											<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+										</svg>
+									</span>
+									<form method="post" action="{{ path('user_delete_banniere', {'id': user.id}) }}" onsubmit="return confirm('Supprimer la bannière ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete_banniere' ~ user.id) }}">
+										<button type="submit" class="bg-black/30 rounded-full p-3 hover:bg-black/50 transition border-none">
+											<svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+											</svg>
+										</button>
+									</form>
+								</div>
+							{% else %}
+								<img id="bannerImg" src="https://mercerie-saint-pierre.com/30134-thickbox_default/tissu-doublure-toscane-antistatique-uni-gris-fonce.jpg" alt="Bannière" class="object-cover w-full h-full">
+								<div class="absolute inset-0 flex items-center justify-center">
+									<span class="bg-black/30 rounded-full p-3 hover:bg-black/50">
+										<svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+											<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M4 18V8a1 1 0 0 1 1-1h1.5l1.707-1.707A1 1 0 0 1 8.914 5h6.172a1 1 0 0 1 .707.293L17.5 7H19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/>
+											<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+										</svg>
+									</span>
+								</div>
+							{% endif %}
+						</label>
 					</div>
-					{{ form_end(form) }}
-				</div>
-			</div>
-		
 
-			<div class="h-32 bg-[#212327] w-full"></div>
-			<div class="relative px-6">
-				<div class="absolute -top-12 left-4">
-					{% if user.avatar %}
-						<img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="Avatar" class="rounded-full w-20 h-20">
-					{% else %}
-						<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar par défaut" class="rounded-full w-20 h-20">
-					{% endif %}
-				</div>
-
-				<div class="flex justify-end pt-2">
-					<button id="editProfileBtn" class="border border-blue-500 text-blue-400 px-4 py-1 rounded-full font-semibold cursor-pointer hover:bg-blue-500 hover:text-white transition">Éditer profil</button>
-				</div>
-				<div class="pt-8 pb-4">
-					<div class="font-bold text-xl">
-						{% if is_granted('ROLE_USER') %}
-							<span>
-								{{ app.user.username }}
+					<!-- Avatar -->
+					<div class="mx-auto flex justify-start -mt-20 mb-8">
+						<label for="avatarInput" class="relative w-32 h-32 cursor-pointer z-20">
+							<img id="avatarImg" src="{{ user.avatar ? asset('uploads/avatars/' ~ user.avatar) : 'https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg' }}" class="object-cover rounded-full bg-black p-4 shadow-lg cursor-pointer w-full h-full" alt="Avatar">
+							<span class="absolute bottom-9 right-9 bg-black/30 rounded-full p-3 hover:bg-black/50">
+								<svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+									<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M4 18V8a1 1 0 0 1 1-1h1.5l1.707-1.707A1 1 0 0 1 8.914 5h6.172a1 1 0 0 1 .707.293L17.5 7H19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/>
+									<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+								</svg>
 							</span>
-						{% else %}
-							<span>Aucun nom d'utilisateur</span>
-							Invité</span>
-					{% endif %}
+						</label>
+						<input type="file" id="avatarInput" name="{{ form.avatar.vars.full_name }}" class="hidden" accept="image/*" onchange="previewAvatar(event)">
+					</div>
+					<button type="submit" class="absolute top-8 right-6 px-4 py-1  text-[#000000] bg-[#eff3f4] rounded-full font-semibold cursor-pointer hover:bg-[#c2c2c2] transition">
+						Enregistrer
+					</button>
+					<div>
+						{{ form_row(form.username) }}
+						{{ form_row(form.description) }}
+					</div>
+					{{ form_row(form._token) }}
 				</div>
-				<div class="text-gray-400">{{ user.email }}</div>
-				<div class="mt-2 text-[15px] text-gray-300">{{ user.description }}</div>
-				<div class="mt-2 flex items-center text-sm text-gray-400 gap-2">
-					<svg class="w-4 h-4 inline text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
-					Joined
-					{{ user.dateInscription ? user.dateInscription | date("d/m/y H:i") : "" }}
-				</div>
-				<div class="mt-2 text-sm">
-					<span class="font-bold text-white">0</span>
-					<span class="text-gray-400 mr-2">Following</span>
-					<span class="font-bold text-white">0</span>
-					<span class="text-gray-400">Followers</span>
-				</div>
+
+				{{ form_end(form, {'render_rest': false}) }}
 			</div>
 		</div>
 
-		{# Onglets #}
-		<div class="border-b border-gray-700 flex px-4 bg-[#000000]">
-			<button class="tab-button px-3 py-2 font-semibold text-blue-400 border-b-2 border-blue-500 hover:bg-[#23272b] cursor-pointer" onclick="showTab('posts', event)">Posts</button>
-			<button class="tab-button px-3 py-2 text-gray-400 hover:text-white hover:bg-[#23272b] cursor-pointer" onclick="showTab('likes', event)">Likes</button>
-			<button class="tab-button px-3 py-2 text-gray-400 hover:text-white hover:bg-[#23272b] cursor-pointer" onclick="showTab('commentaires', event)">Commentaires</button>
-			<button class="tab-button px-3 py-2 text-gray-400 hover:text-white hover:bg-[#23272b] cursor-pointer" onclick="showTab('retweets', event)">Retweets</button>
-		</div>
 
-		<div
-			class="mb-10 bg-[#16181c]">
-			<!-- Posts -->
-			<div id="tab-posts" class="tab-content">
-				{% for tweet in tweets %}
-					<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] hover:bg-[#23272b]">
+		<div class="h-32 w-full {% if not user.profilBanierre %}bg-[#212327]{% endif %}" {% if user.profilBanierre %} style="background-image: url('{{ asset('uploads/banners/' ~ user.profilBanierre) }}'); background-size: cover; background-position: center;" {% endif %}></div>
+		<div class="relative px-6">
+			<div class="absolute -top-12 left-4">
+				{% if user.avatar %}
+					<img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="Avatar" class="rounded-full w-25 h-25 bg-black border-3 border-[#000000]">
+				{% else %}
+					<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar par défaut" class="rounded-full w-25 h-25">
+				{% endif %}
+			</div>
+
+			<div class="flex justify-end pt-2">
+				<button id="editProfileBtn" class="text-[#ffffff] border border-[#485762] px-4 py-1 rounded-full font-semibold cursor-pointer hover:bg-[#181818] transition">Éditer le profil</button>
+			</div>
+			<div class="pt-8 pb-4">
+				<div class="font-bold text-xl">
+					{% if is_granted('ROLE_USER') %}
+						<span>
+							{{ app.user.username }}
+						</span>
+					{% else %}
+						<span>Aucun nom d'utilisateur</span>
+						Invité</span>
+				{% endif %}
+			</div>
+			<div class="text-gray-400">{{ user.email }}</div>
+			<div class="mt-2 text-[15px] text-gray-300">{{ user.description }}</div>
+			<div class="mt-2 flex items-center text-sm text-gray-400 gap-2">
+				<svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+					<path d="M7 4V3h2v1h6V3h2v1h1.5C19.89 4 21 5.12 21 6.5v12c0 1.38-1.11 2.5-2.5 2.5h-13C4.12 21 3 19.88 3 18.5v-12C3 5.12 4.12 4 5.5 4H7zm0 2H5.5c-.27 0-.5.22-.5.5v12c0 .28.23.5.5.5h13c.28 0 .5-.22.5-.5v-12c0-.28-.22-.5-.5-.5H17v1h-2V6H9v1H7V6zm0 6h2v-2H7v2zm0 4h2v-2H7v2zm4-4h2v-2h-2v2zm0 4h2v-2h-2v2zm4-4h2v-2h-2v2z"></path>
+				</svg>
+				Rejoint le
+				{{ user.dateInscription ? user.dateInscription | date("d/m/y H:i") : "" }}
+			</div>
+			<div class="mt-2 text-sm flex gap-4">
+				<a href="{{ path('profil_user_followings', {'id': user.id}) }}" class="hover:underline flex items-center group">
+					<span class="font-bold text-white group-hover:underline">{{ user.followings|length }}
+					</span>
+					<span class="text-gray-400 ml-1 group-hover:underline">
+						Following</span>
+				</a>
+				<a href="{{ path('profil_user_followers', {'id': user.id}) }}" class="hover:underline flex items-center group">
+					<span class="font-bold text-white group-hover:underline">{{ user.followers|length }}
+					</span>
+					<span class="text-gray-400 ml-1 group-hover:underline">
+						Followers</span>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	{# Onglets #}
+	<div class="border-b border-gray-700 flex px-4 bg-[#000000]">
+		<button class="tab-button px-3 py-2 font-semibold text-white border-b-2 border-blue-500 hover:bg-[#181818] transition cursor-pointer" onclick="showTab('posts', event)">Posts</button>
+		<button class="tab-button px-3 py-2 text-[#6a6f74] hover:bg-[#181818] transition cursor-pointer" onclick="showTab('commentaires', event)">Réponses</button>
+		<button class="tab-button px-3 py-2 text-[#6a6f74] hover:bg-[#181818] transition cursor-pointer" onclick="showTab('retweets', event)">Retweets</button>
+		<button class="tab-button px-3 py-2 text-[#6a6f74] hover:bg-[#181818] transition cursor-pointer" onclick="showTab('likes', event)">J'aime</button>
+	</div>
+
+	<div
+		class="mb-10 bg-[#16181c]">
+		<!-- Posts -->
+		<div id="tab-posts" class="tab-content">
+			{% for tweet in tweets %}
+				<a href="{{ path('app_tweet_show', {'id': tweet.id}) }}" class="text-gray-500">
+					<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] hover:bg-[#080808] transition">
 						<div class="flex gap-3">
 							{% if app.user and app.user.avatar %}
 								<img src="{{ asset('uploads/avatars/' ~ app.user.avatar) }}" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
@@ -122,7 +180,7 @@
 								<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-[#000]">
 							{% endif %}
 							<div class="flex-1">
-								<div class="flex justify-between items-center gap-2">
+								<div href="{{ path('profil_user', {"id": user.id}) }}" class="flex justify-between items-center gap-2">
 									<div class="text-sm">
 										<span class="font-bold">{{ app.user.username }}</span>
 										•
@@ -131,89 +189,247 @@
 										</span>
 									</div>
 									<div class="flex flex-row gap-4">
-										<a href="{{ path('app_tweet_show', {'id': tweet.id}) }}" class="text-gray-500 hover:underline">
-											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewbox="0 0 16 16">
-												<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-												<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-											</svg>
-										</a>
 										{% if app.user and tweet.user == app.user %}
-											<a href="{{ path('app_tweet_edit', {'id': tweet.id}) }}" class="text-gray-500 hover:underline">
-												<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewbox="0 0 16 16">
-													<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-												</svg>
-											</a>
 											{{ include('tweet/_delete_form.html.twig') }}
 										{% endif %}
 									</div>
 								</div>
-								<div class="mt-1 text-[15px] text-gray-100">
+								<div class="mt-1 text-[15px] text-gray-100 break-all overflow-hidden">
 									{{ tweet.content }}
 								</div>
-								<div class="flex justify-between items-center gap-4 py-4">
-									<div class="flex justify-center items-center">
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#a8a8a8" class="bi bi-chat" viewbox="0 0 16 16">
-											<path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105"/>
-										</svg>
-										<p class="text-gray-500 cursor-pointe ml-1">0</p>
+								{% if tweet.media %}
+									{% set url = asset('uploads/media/' ~ tweet.media) %}
+									{% set isVideo = tweet.media matches '/\\.mp4$/i' %}
+
+									<div class="mt-3">
+										{% if isVideo %}
+											<video controls preload="metadata" class="rounded-lg max-h-96 w-full border border-[#2f3336]">
+												<source src="{{ url }}" type="video/mp4">
+												Votre navigateur ne supporte pas la vidéo.
+											</video>
+										{% else %}
+											<img src="{{ url }}" alt="Image du tweet" class="rounded-lg max-h-96 w-full object-cover border border-[#2f3336]">
+										{% endif %}
 									</div>
-									<div class="flex justify-center items-center cursor-pointer">
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#a8a8a8" class="bi bi-arrow-down-up" viewbox="0 0 16 16">
-											<path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-										</svg>
-										<p class="text-gray-500 cursor-pointe ml-1">0</p>
+								{% endif %}
+								<div class="flex items-center  py-3">
+									<div class="flex items-center gap-[80px]">
+										<div class="group inline-flex items-center cursor-pointer">
+											<span title="Répondre" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-gray-400 transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/>
+												</svg>
+											</span>
+											<span class=" -ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">
+												{{ tweet.commentaires|length }}
+											</span>
+										</div>
+										<form action="{{ path('app_tweet_retweet', {'id': tweet.id}) }}" method="post" style="display:inline;">
+											<button type="submit" class="cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+												<span title="Repost" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#00ba7c]/15">
+													<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#00ba7c]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+														<path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/>
+													</svg>
+												</span>
+												<span class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#00ba7c]">
+													{{ tweet.retweets|length }}
+												</span>
+											</button>
+										</form>
+										<form action="{{ path('app_tweet_like', {'id': tweet.id}) }}" method="post" style="display:inline;">
+											<button type="submit" class=" cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+												<span title="Aimer" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#f91880]/10">
+													{% if tweet.isLikedBy(app.user) %}
+														<svg class="w-5 h-5 text-[#f91880] " xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+															<path d="M20.884 13.19c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path>
+														</svg>
+													{% else %}
+														<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#f91880]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+															<path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/>
+														</svg>
+													{% endif %}
+												</span>
+												<span class="-ml-1 text-sm transition {{ tweet.isLikedBy(app.user) ? 'text-[#f91880]' : 'group-hover:text-[#f91880]' }}">
+													{{ tweet.likes|length }}
+												</span>
+											</button>
+										</form>
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Voir" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"></path>
+												</svg>
+											</span>
+											<p class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">
+												<span>{{ tweet.views }}</span>
+											</p>
+										</div>
 									</div>
-									<form action="{{ path('app_tweet_like', {'id': tweet.id}) }}" method="post" style="display:inline;">
-										<button type="submit" class="flex items-center text-gray-400 hover:text-pink-300">
-											{% if tweet.isLikedBy(app.user) %}
-												<svg xmlns="http://www.w3.org/2000/svg" fill="#f91880" viewbox="0 0 24 24" width="20" height="20" class="mr-1">
-													<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+
+									<div class="ml-auto flex items-center ">
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Ajouter aux signets" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"></path>
 												</svg>
-											{% else %}
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#a8a8a8" stroke-width="2" viewbox="0 0 24 24" width="20" height="20" class="mr-1">
-													<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+											</span>
+										</div>
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Partager" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path>
 												</svg>
-											{% endif %}
-											<span>{{ tweet.likes|length }}</span>
-										</button>
-									</form>
+											</span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				{% else %}
-					<div class="text-gray-400 px-4 py-8">Aucun tweet pour le moment.</div>
-				{% endfor %}
-			</div>
+				</a>
+			{% else %}
+				<div class="text-gray-400 px-4 py-8">Aucun tweet pour le moment.</div>
+			{% endfor %}
+		</div>
+		<!-- Commentaires -->
+		<div id="tab-commentaires" class="tab-content hidden bg-[#000000] text-gray-400">
+			{% for commentaire in commentTweets %}
+				{% set t = commentaire.tweet %}
+				{% if t %}
+					<a href="{{ path('app_tweet_show', {'id': commentaire.tweet.id}) }}" class="text-gray-500">
+						<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] hover:bg-[#080808] transition">
+							<div class="flex gap-3">
+								{% if app.user and app.user.avatar %}
+									<img src="{{ asset('uploads/avatars/' ~ app.user.avatar) }}" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+								{% else %}
+									<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-[#000]">
+								{% endif %}
+								<div class="flex-1">
+									<div class="flex justify-between items-center gap-2">
+										<div class="text-sm">
+											<span class="font-bold">{{ app.user.username }}</span>
+											•
+											<span class="text-gray-400 text-xs">
+												{{ commentaire.dateComment ? commentaire.dateComment| date("d/m/y H:i") : "" }}
+											</span>
+										</div>
+										<div class="flex flex-row gap-4">
+											{% if app.user and commentaire.user == app.user %}
+												{{ include('commentaire/_delete_form.html.twig') }}
+											{% endif %}
+										</div>
+									</div>
+									<div class="mt-1 text-[15px] text-gray-100">
+										{{ commentaire.content }}
+									</div>
+									<div class="flex items-center  py-3">
+										<div class="flex items-center gap-[80px]">
+											<div class="group inline-flex items-center cursor-pointer">
+												<span title="Répondre" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+													<svg class="w-5 h-5 text-gray-400 transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+														<path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/>
+													</svg>
+												</span>
+												<span
+													class=" -ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">{# {{ like.commentaires|length }} #}
+												</span>
+											</div>
+											<form action="{{ path('app_commentaire_retweet', {'id': commentaire.id}) }}" method="post" style="display:inline;">
+												<button type="submit" class="cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+													<span title="Repost" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#00ba7c]/15">
+														<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#00ba7c]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+															<path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/>
+														</svg>
+													</span>
+													<span class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#00ba7c]">
+														{{ commentaire.retweets|length }}
+													</span>
+												</button>
+											</form>
+											<form action="{{ path('app_commentaire_like', {'id': commentaire.id}) }}" method="post" style="display:inline;">
+												<button type="submit" class=" cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+													<span title="Aimer" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#f91880]/10">
+														{% if commentaire.isLikedBy(app.user) %}
+															<svg class="w-5 h-5 text-[#f91880] " xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+																<path d="M20.884 13.19c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path>
+															</svg>
+														{% else %}
+															<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#f91880]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+																<path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/>
+															</svg>
+														{% endif %}
+													</span>
+													<span class="-ml-1 text-sm transition {{ commentaire.isLikedBy(app.user) ? 'text-[#f91880]' : 'group-hover:text-[#f91880]' }}">
+														{{ commentaire.likes|length }}
+													</span>
+												</button>
+											</form>
+											<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+												<span title="Voir" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+													<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+														<path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"></path>
+													</svg>
+												</span>
+												<p class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">
+													0
+												</p>
+											</div>
+										</div>
 
-			<!-- Likes -->
-			<div id="tab-likes" class="tab-content hidden bg-[#000000] text-gray-400">
-				{% for tweet in likeTweets %}
-					<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] hover:bg-[#23272b]">
+										<div class="ml-auto flex items-center ">
+											<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+												<span title="Ajouter aux signets" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+													<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+														<path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"></path>
+													</svg>
+												</span>
+											</div>
+											<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+												<span title="Partager" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+													<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+														<path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path>
+													</svg>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				{% else %}
+					<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] text-gray-500 italic">
+						Ce commentaire fait référence à un tweet supprimé.
+					</div>
+				{% endif %}
+			{% else %}
+				<div class="text-gray-400 px-4 py-8">Aucun commentaire pour le moment.</div>
+			{% endfor %}
+		</div>
+		<!-- Likes -->
+		<div id="tab-likes" class="tab-content hidden bg-[#000000] text-gray-400">
+			{% for tweet in likeTweets %}
+				<a href="{{ path('app_tweet_show', {'id': tweet.id}) }}" class="text-gray-500">
+					<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] hover:bg-[#080808] transition">
 						<div class="flex gap-3">
-							<img class="w-10 h-10 rounded-full" src="https://placehold.co/40x40" alt="">
+							{% if tweet.user and tweet.user.avatar %}
+								<div href="{{ path('app_profil')}}">
+									<img src="{{ asset('uploads/avatars/' ~ tweet.user.avatar) }}" alt="Avatar" class="w-10 h-10 rounded-full">
+								</div>
+							{% else %}
+								<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar" class="w-10 h-10 rounded-full">
+							{% endif %}
 							<div class="flex-1">
 								<div class="flex justify-between items-center gap-2">
 									<div class="text-sm">
-										<span class="font-bold">{{ app.user.username }}</span>
+										<span class="font-bold">{{ tweet.user.username }}</span>
 										•
 										<span class="text-gray-400 text-xs">
 											{{ tweet.dateTweet ? tweet.dateTweet| date("d/m/y H:i") : "" }}
 										</span>
 									</div>
 									<div class="flex flex-row gap-4">
-										<a href="{{ path('app_tweet_show', {'id': tweet.id}) }}" class="text-gray-500 hover:underline">
-											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewbox="0 0 16 16">
-												<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-												<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-											</svg>
-										</a>
 										{% if app.user and tweet.user == app.user %}
-											<a href="{{ path('app_tweet_edit', {'id': tweet.id}) }}" class="text-gray-500 hover:underline">
-												<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewbox="0 0 16 16">
-													<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-												</svg>
-											</a>
 											{{ include('tweet/_delete_form.html.twig') }}
 										{% endif %}
 									</div>
@@ -221,50 +437,222 @@
 								<div class="mt-1 text-[15px] text-gray-100">
 									{{ tweet.content }}
 								</div>
-								<div class="flex justify-between items-center gap-4 py-4">
-									<div class="flex justify-center items-center">
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#a8a8a8" class="bi bi-chat" viewbox="0 0 16 16">
-											<path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105"/>
-										</svg>
-										<p class="text-gray-500 cursor-pointe ml-1">0</p>
+								{% if tweet.media %}
+									{% set url = asset('uploads/media/' ~ tweet.media) %}
+									{% set isVideo = tweet.media matches '/\\.mp4$/i' %}
+
+									<div class="mt-3">
+										{% if isVideo %}
+											<video controls preload="metadata" class="rounded-lg max-h-96 w-full border border-[#2f3336]">
+												<source src="{{ url }}" type="video/mp4">
+												Votre navigateur ne supporte pas la vidéo.
+											</video>
+										{% else %}
+											<img src="{{ url }}" alt="Image du tweet" class="rounded-lg max-h-96 w-full object-cover border border-[#2f3336]">
+										{% endif %}
 									</div>
-									<div class="flex justify-center items-center cursor-pointer">
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#a8a8a8" class="bi bi-arrow-down-up" viewbox="0 0 16 16">
-											<path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-										</svg>
-										<p class="text-gray-500 cursor-pointe ml-1">0</p>
+								{% endif %}
+								<div class="flex items-center  py-3">
+									<div class="flex items-center gap-[80px]">
+										<div class="group inline-flex items-center cursor-pointer">
+											<span title="Répondre" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-gray-400 transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/>
+												</svg>
+											</span>
+											<span class=" -ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">
+												{{ tweet.commentaires|length }}
+											</span>
+										</div>
+										<form action="{{ path('app_tweet_retweet', {'id': tweet.id}) }}" method="post" style="display:inline;">
+											<button type="submit" class="cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+												<span title="Repost" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#00ba7c]/15">
+													<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#00ba7c]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+														<path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/>
+													</svg>
+												</span>
+												<span class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#00ba7c]">
+													{{ tweet.retweets|length }}
+												</span>
+											</button>
+										</form>
+										<form action="{{ path('app_tweet_like', {'id': tweet.id}) }}" method="post" style="display:inline;">
+											<button type="submit" class=" cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+												<span title="Aimer" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#f91880]/10">
+													{% if tweet.isLikedBy(app.user) %}
+														<svg class="w-5 h-5 text-[#f91880] " xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+															<path d="M20.884 13.19c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path>
+														</svg>
+													{% else %}
+														<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#f91880]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+															<path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/>
+														</svg>
+													{% endif %}
+												</span>
+												<span class="-ml-1 text-sm transition {{ tweet.isLikedBy(app.user) ? 'text-[#f91880]' : 'group-hover:text-[#f91880]' }}">
+													{{ tweet.likes|length }}
+												</span>
+											</button>
+										</form>
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Voir" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"></path>
+												</svg>
+											</span>
+											<p class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">
+												<span>{{ tweet.views }}</span>
+											</p>
+										</div>
 									</div>
-									<form action="{{ path('app_tweet_like', {'id': tweet.id}) }}" method="post" style="display:inline;">
-										<button type="submit" class="flex items-center text-gray-400 hover:text-pink-300">
-											{% if tweet.isLikedBy(app.user) %}
-												<svg xmlns="http://www.w3.org/2000/svg" fill="#f91880" viewbox="0 0 24 24" width="20" height="20" class="mr-1">
-													<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+
+									<div class="ml-auto flex items-center ">
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Ajouter aux signets" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"></path>
 												</svg>
-											{% else %}
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#a8a8a8" stroke-width="2" viewbox="0 0 24 24" width="20" height="20" class="mr-1">
-													<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+											</span>
+										</div>
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Partager" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path>
 												</svg>
-											{% endif %}
-											<span>{{ tweet.likes|length }}</span>
-										</button>
-									</form>
+											</span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				{% else %}
-					<div class="text-gray-400 px-4 py-8">Aucun tweet pour le moment.</div>
-				{% endfor %}
-			</div>
-			<!-- Commentaires -->
-			<div id="tab-commentaires" class="tab-content hidden px-4 py-8 bg-[#000000] text-gray-400">
-				Section Commentaires
-			</div>
-			<!-- Retweets -->
-			<div id="tab-retweets" class="tab-content hidden px-4 py-8 bg-[#000000] text-gray-400">
-				Section Retweet
-			</div>
+				</a>
+			{% else %}
+				<div class="text-gray-400 px-4 py-8">Aucun j'aime pour le moment.</div>
+			{% endfor %}
+		</div>
+		<!-- Retweets -->
+		<div id="tab-retweets" class="tab-content hidden bg-[#000000] text-gray-400">
+			{% for r in retweetTweets %}
+				{% set tweet = r.tweet %}
+				<a href="{{ path('app_tweet_show', {'id': tweet.id}) }}" class="text-gray-500">
+					<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] hover:bg-[#080808] transition">
+						<div class="flex gap-3">
+							{% if tweet.user and tweet.user.avatar %}
+								<div href="{{ path('app_profil') }}">
+									<img src="{{ asset('uploads/avatars/' ~ tweet.user.avatar) }}" alt="Avatar" class="w-10 h-10 rounded-full">
+								</div>
+							{% else %}
+								<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar" class="w-10 h-10 rounded-full">
+							{% endif %}
+							<div class="flex-1">
+								<div class="flex justify-between items-center gap-2">
+									<div class="text-sm">
+										<span class="font-bold">{{ tweet.user.username }}</span>
+										•
+										<span class="text-gray-400 text-xs">
+											{{ tweet.dateTweet ? tweet.dateTweet|date('d/m/y H:i') : '' }}
+										</span>
+									</div>
+								</div>
+
+								<div class="mt-1 text-[15px] text-gray-100">
+									{{ tweet.content }}
+								</div>
+
+								{% if tweet.media %}
+									{% set url = asset('uploads/media/' ~ tweet.media) %}
+									{% set isVideo = tweet.media matches '/\\.mp4$/i' %}
+									<div class="mt-3">
+										{% if isVideo %}
+											<video controls preload="metadata" class="rounded-lg max-h-96 w-full border border-[#2f3336]">
+												<source src="{{ url }}" type="video/mp4">
+												Votre navigateur ne supporte pas la vidéo.
+											</video>
+										{% else %}
+											<img src="{{ url }}" alt="Image du tweet" class="rounded-lg max-h-96 w-full object-cover border border-[#2f3336]">
+										{% endif %}
+									</div>
+								{% endif %}
+								<div class="flex items-center  py-3">
+									<div class="flex items-center gap-[80px]">
+										<div class="group inline-flex items-center cursor-pointer">
+											<span title="Répondre" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-gray-400 transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/>
+												</svg>
+											</span>
+											<span class=" -ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">
+												{{ tweet.commentaires|length }}
+											</span>
+										</div>
+										<form action="{{ path('app_tweet_retweet', {'id': tweet.id}) }}" method="post" style="display:inline;">
+											<button type="submit" class="cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+												<span title="Repost" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#00ba7c]/15">
+													<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#00ba7c]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+														<path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/>
+													</svg>
+												</span>
+												<span class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#00ba7c]">
+													{{ tweet.retweets|length }}
+												</span>
+											</button>
+										</form>
+										<form action="{{ path('app_tweet_like', {'id': tweet.id}) }}" method="post" style="display:inline;">
+											<button type="submit" class=" cursor-pointer group inline-flex items-center text-[#71767b] transition duration-200">
+												<span title="Aimer" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#f91880]/10">
+													{% if tweet.isLikedBy(app.user) %}
+														<svg class="w-5 h-5 text-[#f91880] " xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+															<path d="M20.884 13.19c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path>
+														</svg>
+													{% else %}
+														<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#f91880]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+															<path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/>
+														</svg>
+													{% endif %}
+												</span>
+												<span class="-ml-1 text-sm transition {{ tweet.isLikedBy(app.user) ? 'text-[#f91880]' : 'group-hover:text-[#f91880]' }}">
+													{{ tweet.likes|length }}
+												</span>
+											</button>
+										</form>
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Voir" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"></path>
+												</svg>
+											</span>
+											<p class="-ml-1 text-sm text-[#71767b] transition group-hover:text-[#1d9bf0]">
+												<span>{{ tweet.views }}</span>
+											</p>
+										</div>
+									</div>
+
+									<div class="ml-auto flex items-center ">
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Ajouter aux signets" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"></path>
+												</svg>
+											</span>
+										</div>
+										<div class="group flex justify-center items-center cursor-pointer transition duration-200">
+											<span title="Partager" class="inline-flex items-center justify-center p-2 rounded-full transition group-hover:bg-[#1d9bf0]/15">
+												<svg class="w-5 h-5 text-[#71767b] transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 24 24">
+													<path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path>
+												</svg>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			{% else %}
+				<div class="text-gray-400 px-4 py-8">Aucun retweet pour le moment.</div>
+			{% endfor %}
 		</div>
 	</div>
-	{{ encore_entry_script_tags('app') }}
-{% endblock %}
+</div>
+{{ encore_entry_script_tags('app') }}{% endblock %}

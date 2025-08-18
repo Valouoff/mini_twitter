@@ -1,51 +1,124 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}S'inscrire sur X / X
+{% endblock %}
 
 {% block body %}
-<div class="min-h-screen flex items-center justify-center bg-main-color">
-  <div class="bg-white rounded-lg shadow-md w-full max-w-md p-8">
-    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Créer un compte</h1>
 
-    {{ form_errors(registrationForm) }}
+	<div class="min-h-screen flex items-center justify-center bg-[#000000]">
+		<div class="bg-[#000000] rounded-lg shadow-md w-full max-w-md p-8">
+			<h1 class="text-2xl text-white font-bold text-center mb-6 text-gray-800">Créer votre compte</h1>
 
-    {{ form_start(registrationForm, {
+			{{ form_errors(registrationForm) }}
+
+			{{ form_start(registrationForm, {
         attr: {'class': 'space-y-4'}
     }) }}
-      {{ form_row(registrationForm.username, {
-        label_attr: {class: "block text-gray-700 font-semibold mb-1"},
-        row_attr:  {class: "flex flex-col"},
-        attr: {
-            class: "border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition"
-        }
-      }) }}
 
-      {{ form_row(registrationForm.email, {
-        label_attr: {class: "block text-gray-700 font-semibold mb-1"},
-        row_attr:  {class: "flex flex-col"},
-        attr: {
-            class: "border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition"
-        }
-      }) }}
 
-      {{ form_row(registrationForm.plainPassword, {
-        label: 'Mot de passe',
-        label_attr: {class: "block text-gray-700 font-semibold mb-1"},
-        row_attr:  {class: "flex flex-col"},
-        attr: {
-            class: "border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition"
-        }
-      }) }}
+			<div class="relative">
+				{{ form_widget(registrationForm.username, {
+    attr: {
+      class: 'peer w-full h-12 bg-transparent text-white placeholder-transparent border border-[#2f3336] rounded-lg px-4 pt-4 focus:outline-none focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] transition',
+      placeholder: ' ',
+      maxlength: 50,
+      autocomplete: 'off'
+    }
+  }) }}
 
-      {{ form_row(registrationForm.agreeTerms, {
-        label: "J'accepte les conditions générales",
-        row_attr: {class: "flex items-center gap-x-2"}
-      }) }}
+				{{ form_label(registrationForm.username, "Nom d'utilisateur", {
+    label_attr: {
+      class: 'pointer-events-none select-none absolute left-4 top-1 text-xs text-[#71767b] transition-all
+              peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm
+              peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#1d9bf0]'
+    }
+  }) }}
 
-      <button type="submit" class="w-full py-2 px-4 mt-4 bg-main-color text-white rounded hover:bg-gray-800 transition font-semibold">S'inscrire</button>
-    {{ form_end(registrationForm) }}
+				{% if registrationForm.username.vars.errors|length %}
+					<div class="mb-2 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-red-300 text-sm mt-3" role="alert">
+						{{ form_errors(registrationForm.username) }}
+					</div>
+				{% endif %}
 
-    <p class="text-center mt-4 text-gray-500">Déjà un compte ? <a href="{{ path('app_login') }}" class="text-blue-600 underline hover:text-blue-700">Connecte-toi</a></p>
-  </div>
-</div>
+
+			</div>
+
+
+			<div class="relative">
+				{{ form_widget(registrationForm.email, {
+    attr: {
+      class: 'peer w-full h-12 bg-transparent text-white placeholder-transparent border border-[#2f3336] rounded-lg px-4 pt-4 focus:outline-none focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] transition',
+      placeholder: ' ',
+      autocomplete: 'off'
+    }
+  }) }}
+				{{ form_label(registrationForm.email, 'Email', {
+    label_attr: {
+      class: 'pointer-events-none select-none absolute left-4 top-1 text-xs text-[#71767b] transition-all
+              peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm
+              peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#1d9bf0]'
+    }
+  }) }}
+
+				{% if registrationForm.email.vars.errors|length %}
+					<div class="mb-2 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-red-300 text-sm mt-3" role="alert">
+						{{ form_errors(registrationForm.email) }}
+					</div>
+				{% endif %}
+
+			</div>
+
+
+			<div class="relative">
+				{{ form_widget(registrationForm.plainPassword, {
+    attr: {
+      class: 'peer w-full h-12 bg-transparent text-white placeholder-transparent border border-[#2f3336] rounded-lg px-4 pt-4 focus:outline-none focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] transition',
+      placeholder: ' ',
+      autocomplete: 'new-password'
+    }
+  }) }}
+				{{ form_label(registrationForm.plainPassword, 'Mot de passe', {
+    label_attr: {
+      class: 'pointer-events-none select-none absolute left-4 top-1 text-xs text-[#71767b] transition-all
+              peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm
+              peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#1d9bf0]'
+    }
+  }) }}
+
+				{% if registrationForm.plainPassword.vars.errors|length %}
+					<div class="mb-2 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-red-300 text-sm mt-3" role="alert">
+						{{ form_errors(registrationForm.plainPassword) }}
+					</div>
+				{% endif %}
+
+			</div>
+
+
+			<div class="flex items-center gap-2">
+				{{ form_widget(registrationForm.agreeTerms, {
+    attr: { class: 'h-4 w-4 rounded border-[#2f3336] text-[#1d9bf0] focus:ring-[#1d9bf0]' }
+  }) }}
+				{{ form_label(registrationForm.agreeTerms, "J'accepte les conditions générales", {
+    label_attr: { class: 'text-sm text-[#cfd3d7]' }
+  }) }}
+
+			</div>
+
+			{% if registrationForm.agreeTerms.vars.errors|length %}
+				<div class="mb-2 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-red-300 text-sm mt-3" role="alert">
+					{{ form_errors(registrationForm.agreeTerms) }}
+				</div>
+			{% endif %}
+
+
+			<button type="submit" class=" cursor-pointer w-full h-12 mt-4 rounded-full bg-[#e7e9ea] text-[#0f1419] font-semibold hover:bg-[#cfd3d7] disabled:opacity-40 disabled:cursor-not-allowed transition">
+				S'inscrire
+			</button>
+			{{ form_end(registrationForm) }}
+
+			<p class="text-center mt-4 text-sm text-[#cfd3d7]">Déjà un compte ?
+				<a href="{{ path('app_login') }}" class="text-[#1d9bf0] underline hover:text-blue-700">Connecte-toi</a>
+			</p>
+		</div>
+	</div>
 {% endblock %}

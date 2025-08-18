@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'erreur
+{% endblock %}
+
+{% block body %}
+	<div class="bg-black bg-opacity-75 text-white p-4 grid place-items-center h-screen">
+		<div class="text-center space y-4">
+			<p class="mt-6 text-lg font-medium text-pretty text-white sm:text-xl/8">Hum... Cette page n'existe pas. Essayez de chercher autre chose.</p>
+			<div class="mt-10 flex items-center justify-center gap-x-6">
+				<a href="{{ path('app_tweet_index')}}" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-full w-fit">Chercher</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

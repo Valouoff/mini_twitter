@@ -17,7 +17,7 @@ class UserType extends AbstractType
             ->add('id')
             ->add('email')
             ->add('roles')
-            ;
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -27,6 +27,7 @@ class UserType extends AbstractType
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
             'csrf_token_id'   => 'user_item',
+            'required' => false,
         ]);
     }
 }

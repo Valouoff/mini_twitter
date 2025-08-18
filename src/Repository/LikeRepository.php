@@ -50,4 +50,12 @@ class LikeRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByUserOrderedByIdDesc(User $user): array
+    {
+        return $this->findBy(
+            ['user' => $user],
+            ['id' => 'DESC']
+        );
+    }
 }

@@ -2,10 +2,14 @@
 	<aside class="fixed w-[370px] h-screen bg-main-color border-l border-[#2f3336] flex flex-col justify-between z-30 transition-transform translate-x-full md:translate-x-0">
 		<div class="p-4 flex flex-col gap-4 overflow-y-auto" style="max-height:calc(100vh - 120px);">
 			<div class="relative border border-[#2f3336] rounded-full text-white">
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search absolute left-3 top-3" viewbox="0 0 16 16">
-					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-				</svg>
-				<input class="py-2 pl-10 w-full focus:outline-none focus:ring-1 focus:rounded-4xl" type="text" placeholder="Recherche...">
+				<form action="{{ path('profil_user_search') }}" method="POST">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search absolute left-3 top-3" viewbox="0 0 16 16">
+						<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+					</svg>
+
+					<input class="text-white py-2 pl-10 w-full focus:outline-none text-sm focus:ring-1 focus:rounded-4xl" type="text" placeholder="Chercher" name="searchProfil">
+					<input type="submit" value="Envoyer" class="hidden">
+				</form>
 			</div>
 			<!-- Subscribe section -->
 			<div class=" border-1 border-solid border-[#2f3336] rounded-xl bg-[#000000] p-4 flex flex-col gap-2 shadow">

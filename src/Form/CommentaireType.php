@@ -15,17 +15,7 @@ class CommentaireType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content')
-            // ->add('dateComment')
-            // ->add('user', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            // ])
-            // ->add('tweet', EntityType::class, [
-            //     'class' => Tweet::class,
-            //     'choice_label' => 'id',
-            // ])
-        ;
+            ->add('content');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -35,6 +25,7 @@ class CommentaireType extends AbstractType
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
             'csrf_token_id'   => 'user_item',
+            'required' => false,
         ]);
     }
 }

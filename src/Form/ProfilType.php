@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ProfilType extends AbstractType
 {
@@ -18,6 +19,12 @@ class ProfilType extends AbstractType
             'label' => 'Photo de profil',
             'mapped' => false,
             'required' => false,
+        ])
+         ->add('profilBanierre', FileType::class, [
+            'attr' => ['id' => 'bannerInput'],
+            'label' => 'Changer la bannière',
+            'required' => false,
+            'mapped' => false,
         ])
         ->add('username', TextType::class, [
             'attr'=>[

@@ -24,8 +24,13 @@ class Like
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
+    #[ORM\OrderBy(['dateLiker' => 'DESC'])]
     private ?Tweet $tweet = null;
+
+    #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
+    private ?Commentaire $commentaire = null;
 
     public function getId(): ?int
     {
@@ -74,5 +79,17 @@ class Like
         if ($this->dateLiker === null) {
             $this->dateLiker = new \DateTime();
         }
+    }
+
+    public function getCommentaire(): ?Commentaire
+    {
+        return $this->commentaire;
+    }
+
+    public function setCommentaire(?Commentaire $commentaire): static
+    {
+        $this->commentaire = $commentaire;
+
+        return $this;
     }
 }

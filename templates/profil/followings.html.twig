@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="flex justify-start items-center">
+		<a class="flex items-center gap-4 text-white ml-2 mb-4 rounded-full p-2 font-semibold cursor-pointer hover:bg-[#2f3336] transition" href="{{ path('profil_user', {'id':user.id}) }}">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#ffffff" class="bi bi-arrow-left" viewbox="0 0 24 24">
+				<path d="M7.414 13l5.043 5.04-1.414 1.42L3.586 12l7.457-7.46 1.414 1.42L7.414 11H21v2H7.414z"></path>
+			</svg>
+		</a>
+		<p class="flex items-center text-white text-xl px-5 py-2  mb-4 rounded-full font-semibold cursor-pointer">Profil</p>
+	</div>
+
+<div class="max-w-xl mx-auto my-10 p-4 bg-[#181818] rounded shadow-lg">
+    <h2 class="text-2xl font-bold text-white mb-4">Suivis par {{ user.username }}</h2>
+    {% if people|length > 0 %}
+        <ul>
+            {% for followed in people %}
+                <li class="flex items-center space-x-4 py-3 border-b border-[#2f3336]">
+                    <a href="{{ path('profil_user', {'id': followed.id}) }}">
+                        {% if followed.avatar %}
+                            <img src="{{ asset('uploads/avatars/' ~ followed.avatar) }}" alt="avatar" class="w-10 h-10 rounded-full">
+                        {% else %}
+                            <img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="avatar" class="w-10 h-10 rounded-full">
+                        {% endif %}
+                    </a>
+                    <div>
+                        <a href="{{ path('profil_user', {'id': followed.id}) }}" class="text-white font-semibold hover:underline">
+                            {{ followed.username }}
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-400">Aucun suivi pour l’instant.</p>
+    {% endif %}
+</div>
+{% endblock %}

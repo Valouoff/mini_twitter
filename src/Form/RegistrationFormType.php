@@ -12,6 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
@@ -27,7 +29,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => "Vous des accepter les comditions générales d'utilisation.",
                     ]),
                 ],
             ])
@@ -37,15 +39,18 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
+                    new NotBlank(['message' => 'Le mot de passe est obligatoire.']),
                     new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                        'min' => 8,
+                        'max' => 64,
+                        'minMessage' => 'Au moins {{ limit }} caractères.',
+                        'maxMessage' => 'Au plus {{ limit }} caractères.',
                     ]),
+                    new Regex(['pattern' => '/[a-z]/',      'message' => 'Ajoutez au moins une lettre minuscule.']),
+                    new Regex(['pattern' => '/[A-Z]/',      'message' => 'Ajoutez au moins une lettre majuscule.']),
+                    new Regex(['pattern' => '/\d/',         'message' => 'Ajoutez au moins un chiffre.']),
+                    new Regex(['pattern' => '/[^\w\s]/',    'message' => 'Ajoutez au moins un caractère spécial.']),
+                    new Regex(['pattern' => '/^\S+$/',      'message' => 'Ne mettez pas d’espace.']),
                 ],
             ])
         ;
@@ -58,6 +63,7 @@ class RegistrationFormType extends AbstractType
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
             'csrf_token_id'   => 'user_item',
+            'required' => false,
         ]);
     }
 }

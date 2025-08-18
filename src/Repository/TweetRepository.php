@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Tweet;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,5 +44,13 @@ class TweetRepository extends ServiceEntityRepository
     public function findAllOrderedByIdDesc(): array
     {
         return $this->findBy([], ['id' => 'DESC']);
+    }
+
+    public function findByUserOrderedByIdDesc(User $user): array
+    {
+        return $this->findBy(
+            ['user' => $user],
+            ['id' => 'DESC']
+        );
     }
 }

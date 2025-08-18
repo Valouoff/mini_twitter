@@ -1,4 +1,8 @@
 <form method="post" action="{{ path('app_commentaire_delete', {'id': commentaire.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
-    <button class="btn">Delete</button>
+	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+	<button class=" group btn flex justify-center items-center text-gray-500 cursor-pointer rounded-full p-[5px] hover:bg-[#1d9bf0]/15 transition duration-200">
+		<svg class="w-[24px] h-[24px] text-gray-400 transition group-hover:text-[#1d9bf0]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24">
+			<path stroke="currentColor" stroke-linecap="round" stroke-width="3" d="M6 12h.01m6 0h.01m5.99 0h.01"/>
+		</svg>
+	</button>
 </form>

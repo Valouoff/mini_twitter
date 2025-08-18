@@ -1,51 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}
+	{{ user.username }}
+	sur X
+{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+	<div class="flex justify-start items-center border-b border-gray-700">
+		<a class="flex items-center gap-4 border border-blue-500 text-white px-5 py-2 ml-4 mb-4 rounded-full font-semibold cursor-pointer hover:bg-blue-500 transition" href="{{ path('app_admin_index') }}">
+			<p>Retour</p>
+		</a>
+	</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Tweets</th>
-                <td>
-                {% for tweet in tweets %}
-                <div>
-			        {{ tweet.content }} <br>
-                </div>
-                {% else %}
-                <div>Aucun tweet</div>
-		        {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th>Tweets likés</th>
-                <td>
-                {% for like in likes %}
-                <div>
-                    Tweet liké : {{ like.tweet.content }} <br>
-                    Liké le : {{ like.dateLiker|date('d/m/Y') }}
-                </div>
-                {% else %}
-                    <div>Aucun like</div>
-		        {% endfor %}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+	{% if tweets|length == 0 %}
+		<div class="p-8 text-gray-400">Ce membre n'a posté aucun tweet.</div>
+	{% else %}
+		{% for tweet in tweets %}
+			<div class="px-4 py-5 border-b border-gray-700 bg-[#000000] mb-8">
+				<div class="flex gap-3">
+					<img id="avatarImg" src="{{ user.avatar ? asset('uploads/avatars/' ~ user.avatar) : 'https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg' }}" class="h-16 w-16 mb-10 object-cover rounded-full border-2 border-[#2c2c2c] shadow-lg cursor-pointer" alt="Avatar">
+					<div class="flex-1">
+						<div class="flex justify-between items-center gap-2">
+							<div class="text-sm">
+								<span class="font-bold text-white">{{ user.username }}</span>
+								<span class="text-gray-400 text-xs">
+									•
+									{{ tweet.dateTweet ? tweet.dateTweet|date('d/m/y') : '' }}
+								</span>
+							</div>
+						</div>
+						<div class="mt-1 text-[15px] text-gray-100">
+							{{ tweet.content }}
+							<div class="px-4 py-3 flex items-center justify-end">
+								{{ include('tweet/_delete_form.html.twig') }}
+							</div>
+						</div>
 
-    <a href="{{ path('app_admin_index') }}">Users</a>
-{# 
-    <a href="{{ path('app_admin_delete') }}">Supprimer</a> #}
+						{% set commentId = 'comments-' ~ tweet.id %}
+						<div class="mt-4 ml-4">
+							<button type="button" class="flex items-center gap-2 text-blue-400 text-sm focus:outline-none comment-toggle" data-target="#{{ commentId }}">
+								<svg class="transition-transform duration-200 w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+								{{ tweet.commentaires|length }}
+								Commentaire{{ tweet.commentaires|length > 1 ? 's' : '' }}
+							</button>
 
-    {{ include('admin/delete.html.twig') }}
+							<div id="{{ commentId }}" class="hidden">
+								<div class="mt-2">
+									{% for commentaire in tweet.commentaires %}
+										<div class="p-3 border border-gray-600 rounded-lg mb-3 bg-gray-900">
+											<span class="font-semibold text-blue-400 text-sm">
+												{{ commentaire.user.username }}
+											</span>
+											<span class="text-xs text-gray-400 ml-2">
+												{{ commentaire.dateComment ? commentaire.dateComment|date('d/m/y H:i') : '' }}
+											</span>
+											<div class="mt-1 text-white text-sm">{{ commentaire.content }}</div>
+											<div class="px-4 py-3 flex items-center justify-end">
+												{{ include('commentaire/_delete_form.html.twig') }}
+											</div>
+										</div>
+									{% else %}
+										<span class="text-gray-400 text-xs">(Aucun commentaire)</span>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	{% endif %}
 {% endblock %}

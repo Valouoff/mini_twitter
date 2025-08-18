@@ -1,9 +1,13 @@
+<!--MENU TOP FORMAT MOBILE-->
+
 <nav class="absolute top-0 right-0 w-full h-16 bg-main-color border-b-1 border-[#2f3336] transition-transform md:hidden z-50">
 	<div class="flex justify-between items-center m-5">
-		<a href="#" class="flex flex-col text-xs text-gray-500 hover:text-blue-400">
-			<svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 18">
-				<path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>
-			</svg>
+		<a href="#" id="openProfileMenu" class="flex flex-col text-xs text-gray-500 hover:text-blue-400">
+			{% if app.user and app.user.avatar %}
+				<img src="{{ asset('uploads/avatars/' ~ app.user.avatar) }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+			{% else %}
+				<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+			{% endif %}
 		</a>
 		<a href="#" class="flex flex-col text-gray-500 hover:text-blue-400">
 			<svg class="w-5 h-5 text-white" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 300">
@@ -18,66 +22,267 @@
 	</div>
 </nav>
 
-<aside id="logo-sidebar" class="fixed z-40 w-64 h-screen transition-transform -translate-x-full md:translate-x-0" aria-label="Sidebar">
-	<div class="relative h-full px-3 py-4 overflow-y-auto bg-main-color border-r-1 border-[#2f3336]">
-		<a href="{{ path('app_tweet_index') }}" class="flex items-center ps-2.5 mb-5">
-			<svg class="w-6 h-6 text-white" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 300">
-				<path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66"/>
-			</svg>
-		</a>
-		<ul class="space-y-2 font-medium">
-			<li>
-				<a href="{{ path('app_tweet_index') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house" viewbox="0 0 16 16">
-						<path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-					</svg>
-					<span class="ms-3">Accueil</span>
+<!-- MENU PROFIL SLIDE LEFT MOBILE -->
+<aside id="profile-menu" class="fixed z-50 top-0 left-0 w-72 max-w-full h-screen bg-main-color shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out border-r-1 border-[#2f3336]">
+	<div class="relative h-full px-3 overflow-y-auto flex flex-col items-start pl-3 py-6">
+		<button id="closeProfileMenu" class="absolute top-4 right-4 text-3xl text-gray-600 hover:text-red-500 font-bold">&times;</button>
+		{% if app.user and app.user.avatar %}
+			<img src="{{ asset('uploads/avatars/' ~ app.user.avatar) }}" alt="Avatar" class="w-20 h-20 rounded-full object-cover mb-2">
+		{% else %}
+			<img src="https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg" alt="Avatar" class="w-20 h-20 rounded-full object-cover mb-2">
+		{% endif %}
+		<p class="text-lg font-semibold ml-2 mb-1 text-white">
+			{{ app.user ? app.user.username : "Invité" }}
+		</p>
+		<p class="text-gray-400 text-xs ml-2 mb-4">
+			{{ app.user ? app.user.email : "" }}
+		</p>
+		{% if app.user %}
+			<div class="mt-2 text-sm flex gap-4">
+				<a href="{{ path('profil_user_followings', {'id': app.user.id}) }}" class="hover:underline flex items-center group">
+					<span class="font-bold text-white group-hover:underline">{{ app.user.followings|length }} </span>
+					<span class="text-gray-400 ml-1 group-hover:underline"> Following</span>
 				</a>
-			</li>
-			<li>
-				<a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope" viewbox="0 0 16 16">
-						<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-					</svg>
-					<span class="flex-1 ms-3 whitespace-nowrap">Messages</span>
-					{# <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300"></span> #}
+				<a href="{{ path('profil_user_followers', {'id': app.user.id}) }}" class="hover:underline flex items-center group">
+					<span class="font-bold text-white group-hover:underline">{{ app.user.followers|length }} </span>
+					<span class="text-gray-400 ml-1 group-hover:underline"> Followers</span>
 				</a>
-			</li>
+			</div>
+		{% endif %}
+		<ul class="space-y-1 font-medium text-lg">
 			<li>
-				<a href="{{ path('app_profil')}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-people" viewbox="0 0 16 16">
-						<path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+				<a href="{{ path('app_profil')}}" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M5.651 19h12.698c-.337-1.8-1.023-3.21-1.945-4.19C15.318 13.65 13.838 13 12 13s-3.317.65-4.404 1.81c-.922.98-1.608 2.39-1.945 4.19zm.486-5.56C7.627 11.85 9.648 11 12 11s4.373.85 5.863 2.44c1.477 1.58 2.366 3.8 2.632 6.46l.11 1.1H3.395l.11-1.1c.266-2.66 1.155-4.88 2.632-6.46zM12 4c-1.105 0-2 .9-2 2s.895 2 2 2 2-.9 2-2-.895-2-2-2zM8 6c0-2.21 1.791-4 4-4s4 1.79 4 4-1.791 4-4 4-4-1.79-4-4z"></path>
 					</svg>
 					<span class="flex-1 ms-3 whitespace-nowrap">Profil</span>
 				</a>
 			</li>
 			<li>
-				<a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-grid" viewbox="0 0 16 16">
-						<path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
 					</svg>
-					<span class="flex-1 ms-3 whitespace-nowrap">Paramètres</span>
-					<span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
+					<span class="flex-1 ms-3 whitespace-nowrap">Premium</span>
 				</a>
 			</li>
 			<li>
-				<a href="#" class="absolute bottom-23 left-0 right-0 mx-auto w-[90%] flex items-center justify-center px-6 py-3 border border-gray-300 rounded-full text-gray-900 bg-white hover:bg-gray-100 shadow group">
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M7.501 19.917L7.471 21H.472l.029-1.027c.184-6.618 3.736-8.977 7-8.977.963 0 1.95.212 2.87.672-.444.478-.851 1.03-1.212 1.656-.507-.204-1.054-.329-1.658-.329-2.767 0-4.57 2.223-4.938 6.004H7.56c-.023.302-.05.599-.059.917zm15.998.056L23.528 21H9.472l.029-1.027c.184-6.618 3.736-8.977 7-8.977s6.816 2.358 7 8.977zM21.437 19c-.367-3.781-2.17-6.004-4.938-6.004s-4.57 2.223-4.938 6.004h9.875zm-4.938-9c-.799 0-1.527-.279-2.116-.73-.836-.64-1.384-1.638-1.384-2.77 0-1.93 1.567-3.5 3.5-3.5s3.5 1.57 3.5 3.5c0 1.132-.548 2.13-1.384 2.77-.589.451-1.317.73-2.116.73zm-1.5-3.5c0 .827.673 1.5 1.5 1.5s1.5-.673 1.5-1.5-.673-1.5-1.5-1.5-1.5.673-1.5 1.5zM7.5 3C9.433 3 11 4.57 11 6.5S9.433 10 7.5 10 4 8.43 4 6.5 5.567 3 7.5 3zm0 2C6.673 5 6 5.673 6 6.5S6.673 8 7.5 8 9 7.327 9 6.5 8.327 5 7.5 5z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Communautés</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M3 4.5C3 3.12 4.12 2 5.5 2h13C19.88 2 21 3.12 21 4.5v15c0 1.38-1.12 2.5-2.5 2.5h-13C4.12 22 3 20.88 3 19.5v-15zM5.5 4c-.28 0-.5.22-.5.5v15c0 .28.22.5.5.5h13c.28 0 .5-.22.5-.5v-15c0-.28-.22-.5-.5-.5h-13zM16 10H8V8h8v2zm-8 2h8v2H8v-2z"></path>
+					</svg>
+					<span class="ms-3">List</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Signets</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M7.323 2h11.443l-3 5h6.648L6.586 22.83 7.847 14H2.523l4.8-12zm1.354 2l-3.2 8h4.676l-.739 5.17L17.586 9h-5.352l3-5H8.677z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Organisations ce...</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M23 3v14h-2V5H5V3h18zM10 17c1.1 0 2-1.34 2-3s-.9-3-2-3-2 1.34-2 3 .9 3 2 3zM1 7h18v14H1V7zm16 10c-1.1 0-2 .9-2 2h2v-2zm-2-8c0 1.1.9 2 2 2V9h-2zM3 11c1.1 0 2-.9 2-2H3v2zm0 4c2.21 0 4 1.79 4 4h6c0-2.21 1.79-4 4-4v-2c-2.21 0-4-1.79-4-4H7c0 2.21-1.79 4-4 4v2zm0 4h2c0-1.1-.9-2-2-2v2z"></path>
+					</svg>
+					<span class="ms-3">Monétisation</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M1.996 5.5c0-1.38 1.119-2.5 2.5-2.5h15c1.38 0 2.5 1.12 2.5 2.5v13c0 1.38-1.12 2.5-2.5 2.5h-15c-1.381 0-2.5-1.12-2.5-2.5v-13zm2.5-.5c-.277 0-.5.22-.5.5v13c0 .28.223.5.5.5h15c.276 0 .5-.22.5-.5v-13c0-.28-.224-.5-.5-.5h-15zm8.085 5H8.996V8h7v7h-2v-3.59l-5.293 5.3-1.415-1.42L12.581 10z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Publicité</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewbox="0 0 32 32 ">
+						<path d="M19.5 6H17V4.5C17 3.12 15.88 2 14.5 2h-5C8.12 2 7 3.12 7 4.5V6H4.5C3.12 6 2 7.12 2 8.5v10C2 19.88 3.12 21 4.5 21h15c1.38 0 2.5-1.12 2.5-2.5v-10C22 7.12 20.88 6 19.5 6zM9 4.5c0-.28.23-.5.5-.5h5c.28 0 .5.22.5.5V6H9V4.5zm11 14c0 .28-.22.5-.5.5h-15c-.27 0-.5-.22-.5-.5v-3.04c.59.35 1.27.54 2 .54h5v1h2v-1h5c.73 0 1.41-.19 2-.54v3.04zm0-6.49c0 1.1-.9 1.99-2 1.99h-5v-1h-2v1H6c-1.1 0-2-.9-2-2V8.5c0-.28.23-.5.5-.5h15c.28 0 .5.22.5.5v3.51z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Jobs</span>
+				</a>
+			</li>
+
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M10.54 1.75h2.92l1.57 2.36c.11.17.32.25.53.21l2.53-.59 2.17 2.17-.58 2.54c-.05.2.04.41.21.53l2.36 1.57v2.92l-2.36 1.57c-.17.12-.26.33-.21.53l.58 2.54-2.17 2.17-2.53-.59c-.21-.04-.42.04-.53.21l-1.57 2.36h-2.92l-1.58-2.36c-.11-.17-.32-.25-.52-.21l-2.54.59-2.17-2.17.58-2.54c.05-.2-.03-.41-.21-.53l-2.35-1.57v-2.92L4.1 8.97c.18-.12.26-.33.21-.53L3.73 5.9 5.9 3.73l2.54.59c.2.04.41-.04.52-.21l1.58-2.36zm1.07 2l-.98 1.47C10.05 6.08 9 6.5 7.99 6.27l-1.46-.34-.6.6.33 1.46c.24 1.01-.18 2.07-1.05 2.64l-1.46.98v.78l1.46.98c.87.57 1.29 1.63 1.05 2.64l-.33 1.46.6.6 1.46-.34c1.01-.23 2.06.19 2.64 1.05l.98 1.47h.78l.97-1.47c.58-.86 1.63-1.28 2.65-1.05l1.45.34.61-.6-.34-1.46c-.23-1.01.18-2.07 1.05-2.64l1.47-.98v-.78l-1.47-.98c-.87-.57-1.28-1.63-1.05-2.64l.34-1.46-.61-.6-1.45.34c-1.02.23-2.07-.19-2.65-1.05l-.97-1.47h-.78zM12 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5c.82 0 1.5-.67 1.5-1.5s-.68-1.5-1.5-1.5zM8.5 12c0-1.93 1.56-3.5 3.5-3.5 1.93 0 3.5 1.57 3.5 3.5s-1.57 3.5-3.5 3.5c-1.94 0-3.5-1.57-3.5-3.5z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Paramètre et con...</span>
+				</a>
+			</li>
+			{% if is_granted('ROLE_ADMIN') %}
+				<li>
+					<a href="{{ path('app_admin_index')}}" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+						<svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-grid" viewbox="0 0 16 16">
+							<path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+						</svg>
+						<span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
+						<span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
+					</a>
+				</li>
+			{% endif %}
+			<li>
+				<a href="{{ path('app_logout') }}" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200 pl-6">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewbox="0 0 16 16">
+						<path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+						<path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+					</svg>
+					<span>Déconnexion</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</aside>
+
+<div id="profile-menu-backdrop" class="hidden fixed inset-0 z-40 backdrop-blur"></div>
+
+<!--ASIDE FORMAT LAPTOP-->
+
+<aside id="logo-sidebar" class="fixed z-40 w-64 md:w-72 xl:w-68 h-screen transition-transform -translate-x-full md:translate-x-0" aria-label="Sidebar">
+	<div class="relative h-full px-3 py-4 overflow-y-auto bg-main-color border-r-1 border-[#2f3336]">
+		<a href="{{ path('app_tweet_index') }}" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+			<svg class="size-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+				<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+			</svg>
+		</a>
+		<ul class="space-y-2 font-medium text-lg">
+			<li>
+				<a href="{{ path('app_tweet_index') }}" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M21.591 7.146L12.52 1.157c-.316-.21-.724-.21-1.04 0l-9.071 5.99c-.26.173-.409.456-.409.757v13.183c0 .502.418.913.929.913H9.14c.51 0 .929-.41.929-.913v-7.075h3.909v7.075c0 .502.417.913.928.913h6.165c.511 0 .929-.41.929-.913V7.904c0-.301-.158-.584-.408-.758z"></path>
+					</svg>
+					<span class="ms-3">Accueil</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M10.25 3.75c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c1.795 0 3.419-.726 4.596-1.904 1.178-1.177 1.904-2.801 1.904-4.596 0-3.59-2.91-6.5-6.5-6.5zm-8.5 6.5c0-4.694 3.806-8.5 8.5-8.5s8.5 3.806 8.5 8.5c0 1.986-.682 3.815-1.824 5.262l4.781 4.781-1.414 1.414-4.781-4.781c-1.447 1.142-3.276 1.824-5.262 1.824-4.694 0-8.5-3.806-8.5-8.5z"></path>
+					</svg>
+					<span class="ms-3">Explorer</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M19.993 9.042C19.48 5.017 16.054 2 11.996 2s-7.49 3.021-7.999 7.051L2.866 18H7.1c.463 2.282 2.481 4 4.9 4s4.437-1.718 4.9-4h4.236l-1.143-8.958zM12 20c-1.306 0-2.417-.835-2.829-2h5.658c-.412 1.165-1.523 2-2.829 2zm-6.866-4l.847-6.698C6.364 6.272 8.941 4 11.996 4s5.627 2.268 6.013 5.295L18.864 16H5.134z"></path>
+					</svg>
+					<span class="ms-3">Notifications</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5v13c0 1.381-1.119 2.5-2.5 2.5h-15c-1.381 0-2.5-1.119-2.5-2.5v-13zm2.5-.5c-.276 0-.5.224-.5.5v2.764l8 3.638 8-3.636V5.5c0-.276-.224-.5-.5-.5h-15zm15.5 5.463l-8 3.636-8-3.638V18.5c0 .276.224.5.5.5h15c.276 0 .5-.224.5-.5v-8.037z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Messages</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewbox="0 0 32 32 ">
+						<path d="M12.745 20.54l10.97-8.19c.539-.4 1.307-.244 1.564.38 1.349 3.288.746 7.241-1.938 9.955-2.683 2.714-6.417 3.31-9.83 1.954l-3.728 1.745c5.347 3.697 11.84 2.782 15.898-1.324 3.219-3.255 4.216-7.692 3.284-11.693l.008.009c-1.351-5.878.332-8.227 3.782-13.031L33 0l-4.54 4.59v-.014L12.743 20.544m-2.263 1.987c-3.837-3.707-3.175-9.446.1-12.755 2.42-2.449 6.388-3.448 9.852-1.979l3.72-1.737c-.67-.49-1.53-1.017-2.515-1.387-4.455-1.854-9.789-.931-13.41 2.728-3.483 3.523-4.579 8.94-2.697 13.561 1.405 3.454-.899 5.898-3.22 8.364C1.49 30.2.666 31.074 0 32l10.478-9.466"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Grok</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Signets</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M7.501 19.917L7.471 21H.472l.029-1.027c.184-6.618 3.736-8.977 7-8.977.963 0 1.95.212 2.87.672-.444.478-.851 1.03-1.212 1.656-.507-.204-1.054-.329-1.658-.329-2.767 0-4.57 2.223-4.938 6.004H7.56c-.023.302-.05.599-.059.917zm15.998.056L23.528 21H9.472l.029-1.027c.184-6.618 3.736-8.977 7-8.977s6.816 2.358 7 8.977zM21.437 19c-.367-3.781-2.17-6.004-4.938-6.004s-4.57 2.223-4.938 6.004h9.875zm-4.938-9c-.799 0-1.527-.279-2.116-.73-.836-.64-1.384-1.638-1.384-2.77 0-1.93 1.567-3.5 3.5-3.5s3.5 1.57 3.5 3.5c0 1.132-.548 2.13-1.384 2.77-.589.451-1.317.73-2.116.73zm-1.5-3.5c0 .827.673 1.5 1.5 1.5s1.5-.673 1.5-1.5-.673-1.5-1.5-1.5-1.5.673-1.5 1.5zM7.5 3C9.433 3 11 4.57 11 6.5S9.433 10 7.5 10 4 8.43 4 6.5 5.567 3 7.5 3zm0 2C6.673 5 6 5.673 6 6.5S6.673 8 7.5 8 9 7.327 9 6.5 8.327 5 7.5 5z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Communautés</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Premium</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M7.323 2h11.443l-3 5h6.648L6.586 22.83 7.847 14H2.523l4.8-12zm1.354 2l-3.2 8h4.676l-.739 5.17L17.586 9h-5.352l3-5H8.677z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Organisations ce...</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{ path('app_profil')}}" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M5.651 19h12.698c-.337-1.8-1.023-3.21-1.945-4.19C15.318 13.65 13.838 13 12 13s-3.317.65-4.404 1.81c-.922.98-1.608 2.39-1.945 4.19zm.486-5.56C7.627 11.85 9.648 11 12 11s4.373.85 5.863 2.44c1.477 1.58 2.366 3.8 2.632 6.46l.11 1.1H3.395l.11-1.1c.266-2.66 1.155-4.88 2.632-6.46zM12 4c-1.105 0-2 .9-2 2s.895 2 2 2 2-.9 2-2-.895-2-2-2zM8 6c0-2.21 1.791-4 4-4s4 1.79 4 4-1.791 4-4 4-4-1.79-4-4z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Profil</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="inline-flex items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewbox="0 0 24 24">
+						<path d="M3.75 12c0-4.56 3.69-8.25 8.25-8.25s8.25 3.69 8.25 8.25-3.69 8.25-8.25 8.25S3.75 16.56 3.75 12zM12 1.75C6.34 1.75 1.75 6.34 1.75 12S6.34 22.25 12 22.25 22.25 17.66 22.25 12 17.66 1.75 12 1.75zm-4.75 11.5c.69 0 1.25-.56 1.25-1.25s-.56-1.25-1.25-1.25S6 11.31 6 12s.56 1.25 1.25 1.25zm9.5 0c.69 0 1.25-.56 1.25-1.25s-.56-1.25-1.25-1.25-1.25.56-1.25 1.25.56 1.25 1.25 1.25zM13.25 12c0 .69-.56 1.25-1.25 1.25s-1.25-.56-1.25-1.25.56-1.25 1.25-1.25 1.25.56 1.25 1.25z"></path>
+					</svg>
+					<span class="flex-1 ms-3 whitespace-nowrap">Plus</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" id="openTweetModalBtn" class=" transition duration-200 text-base bottom-23 left-0 right-0 mx-auto w-[90%] flex items-center justify-center px-6 py-3 border border-gray-300 rounded-full text-[#000000] bg-white hover:bg-gray-100 shadow group font-bold">
 					Poster
 				</a>
 			</li>
+
+
 			<li>
-				<div id="modalLogout" class="hidden absolute bottom-23 left-0 right-0 w-[90%] rounded-lg p-4 mx-auto bg-[#000000] border border-gray-700" >
-					<form class="" data-turbo="false"  action="{{ path('app_logout') }}" method="post">
-						<button class="flex items-center gap-4 w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group" type="submit">
+				<div id="modalLogout" class="hidden absolute bottom-23 left-0 right-0 w-[90%] rounded-lg p-4 mx-auto bg-[#000000] border border-gray-700">
+					<form class="" data-turbo="false" action="{{ path('app_logout') }}" method="post">
+						<button class="inline-flex items-center gap-2 text-gray-900 rounded-full py-4 px-4 dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
 							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewbox="0 0 16 16">
 								<path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
 								<path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
 							</svg>
 							<span>Déconnexion</span>
 						</button>
+						{% if is_granted('ROLE_ADMIN') %}
+							<a href="{{ path('app_admin_index')}}" class="inline-flex items-center gap-2 py-4 px-4 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-grid" viewbox="0 0 16 16">
+									<path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+								</svg>
+								<span class="flex-1 ms-3 whitespace-nowrap">Admin Panel</span>
+							</a>
+						{% endif %}
 					</form>
 				</div>
-				<div id="btnLogout" class="w-[90%] flex absolute bottom-5 left-0 right-0 mx-auto cursor-pointer items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+				<div id="btnLogout" class="w-[90%] flex absolute bottom-5 left-0 right-0 mx-auto cursor-pointer items-center px-5 py-3 gap-2 text-gray-900 rounded-full dark:text-white hover:bg-gray-100 dark:hover:bg-[#181818] group transition duration-200">
 					{% if app.user and app.user.avatar %}
 						<img src="{{ asset('uploads/avatars/' ~ app.user.avatar) }}" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
 					{% else %}
@@ -91,12 +296,21 @@
 						<span class="ml-3">
 							Invité</span>
 					{% endif %}
+					<button type="button" aria-label="Plus d'options" class="ms-auto inline-flex items-center p-2 rounded-full focus:outline-none shrink-0 cursor-pointer">
+						<svg class="w-6 h-6 text-white group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 12h.01m6 0h.01m5.99 0h.01"/>
+						</svg>
+					</button>
 				</div>
 			</li>
+
 		</ul>
 	</div>
 </aside>
-<nav class="fixed bottom-0 left-0 w-full h-20 bg-main-color border-t-1 border-gray-400 shadow transition-transform md:hidden z-50">
+
+<!--MENU BOTTOM FORMAT MOBILE-->
+
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-main-color border-t-1 border-gray-400 shadow transition-transform md:hidden z-40">
 	<div class="flex justify-evenly items-center m-5">
 		<a href="#" class="flex flex-col text-xs text-gray-500 hover:text-blue-400">
 			<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-house-door-fill" viewbox="0 0 16 16">
@@ -122,7 +336,7 @@
 </nav>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
+	document.addEventListener('DOMContentLoaded', function () {
 const modalLogout = document.getElementById('modalLogout');
 const btnLogout = document.getElementById('btnLogout');
 btnLogout.addEventListener('click', () => {

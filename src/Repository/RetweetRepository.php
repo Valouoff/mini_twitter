@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Retweet;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,4 +41,11 @@ class RetweetRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findTweetsRetweetByUser(User $user): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery("SELECT retweet FROM App\Entity\Retweet retweet JOIN App\Entity\Tweet tweet WITH retweet.tweet = tweet WHERE retweet.user = :user")->setParameter("user", $user);
+        return $query->getResult();
+    }
 }
